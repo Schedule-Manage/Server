@@ -1,6 +1,4 @@
-// import morgan, { StreamOptions } from "morgan";
-const morgan = require("morgan");
-const StreamOptions = morgan.StreamOptions
+import morgan, { StreamOptions } from "morgan";
 import Logger from "./logger";
 
 // Override the stream method by telling
