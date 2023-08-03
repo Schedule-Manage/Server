@@ -1,9 +1,6 @@
-// const express = require("express");
 import express, { Application } from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import morganMiddleware from "../middleware/loggers/morgan_middleware";
-// const mongoose = require("mongoose");
 const runServer = () => {
   const app: Application = express();
 

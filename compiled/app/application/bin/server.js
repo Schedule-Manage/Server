@@ -4,11 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runServer = void 0;
-// const express = require("express");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_middleware_1 = __importDefault(require("../middleware/loggers/morgan_middleware"));
-// const mongoose = require("mongoose");
 const runServer = () => {
     const app = (0, express_1.default)();
     // Setting up cors

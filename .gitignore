@@ -1,0 +1,14 @@
+# Common files
+node_modules/
+compiled/
+logs/
+coverage/
+
+# Environment Variables
+.env
+# .env.local
+# .env.testing
+# .env.production
+
+
+

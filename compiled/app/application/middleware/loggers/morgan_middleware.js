@@ -3,9 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import morgan, { StreamOptions } from "morgan";
-const morgan = require("morgan");
-const StreamOptions = morgan.StreamOptions;
+const morgan_1 = __importDefault(require("morgan"));
 const logger_1 = __importDefault(require("./logger"));
 // Override the stream method by telling
 // Morgan to use our custom logger instead of the console.log.
@@ -23,7 +21,7 @@ const skip = () => {
     return env !== "development";
 };
 // Build the morgan middleware
-const morganMiddleware = morgan(
+const morganMiddleware = (0, morgan_1.default)(
 // Define message format string (this is the default one).
 // The message format is made from tokens, and each token is
 // defined inside the Morgan library.
