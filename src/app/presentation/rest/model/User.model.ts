@@ -16,23 +16,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    zipcode: {
-      type: String,
-      required: true,
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
-    },
-    subscriptionType: {
-      type: String,
-      required: false,
-      default: "FREE_USER",
-    },
-    blockedUser: {
-      type: Array,
-      required: false,
-    },
   },
   { timestamps: true }
 );

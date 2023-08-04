@@ -4,6 +4,21 @@ import { PasswordCompareInput } from "../../../../types";
 // import jwt from "jsonwebtoken";
 
 /**
+ * Helps to configure cors options based on the allowed domains
+ * that are passed on through the environment variables
+ * @returns
+ */
+const createCorsOptions = (): cors.CorsOptions => {
+  const allowedDomains = process.env.ALLOWED_DOMAINS ?? "";
+  const domains = allowedDomains.split(";").join(",");
+
+  const corsOptions: cors.CorsOptions = {
+    origin: domains,
+  };
+  return corsOptions;
+};
+
+/**
  * Used to hash passwords
  * @param password
  * @returns string
@@ -24,3 +39,5 @@ const comparePasswords = async (input: PasswordCompareInput) => {
 
   return result;
 };
+
+export { comparePasswords, generateSecurePasswords, createCorsOptions };

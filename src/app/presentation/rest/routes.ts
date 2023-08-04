@@ -1,4 +1,5 @@
 import { Router } from "express";
+import AuthModule from "./module/auth.module";
 
 export default class AppRouter {
   public router: Router;
