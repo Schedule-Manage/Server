@@ -21,23 +21,5 @@ export default class AuthModule {
     const payload: RegisterInput = req.body;
     const response = await usecase.register(payload);
     return res.json(response);
-    // const newUser = new User({
-    //   username: req.body.username,
-    //   email: req.body.email,
-    //   phoneNumber: req.body.phoneNumber,
-    //   // password: CryptoJS.AES.encrypt(
-    //   //   req.body.password,
-    //   //   process.env.PASS_SEC
-    //   // ).toString(),
-    //   zipcode: req.body.zipcode,
-    // });
-
-    // try {
-    //   const savedUser = await newUser.save();
-    //   const { password, ...others } = savedUser.toObject();
-    //   res.status(201).json(others);
-    // } catch (err) {
-    //   res.status(500).json(err);
-    // }
   }
 }
