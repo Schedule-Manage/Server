@@ -1,10 +1,15 @@
 import Logger from "../../application/middleware/loggers/logger";
-import { generateSecurePasswords } from "../../application/utils/helpers";
+import {
+  comparePasswords,
+  generateSecurePasswords,
+} from "../../application/utils/helpers";
 import {
   LoginInput,
   RegisterInput,
 } from "../../domain/core/validators/auth.validators";
 const User = require("./../../presentation/rest/model/User.model");
+
+const jwt = require("jsonwebtoken");
 export default class AuthRepository {
   constructor() {}
 
@@ -43,5 +48,54 @@ export default class AuthRepository {
   }
 
   //   Route for logging in
-  async login(input: LoginInput) {}
+  async login(input: LoginInput) {
+    try {
+      const user = await User.findOne({ email: input.email });
+
+      if (!user) {
+        return { status: 400, message: "Wrong Credentials!" };
+      }
+
+      const ifPasswordMatch = await comparePasswords({
+        password: input.password,
+        encrypted: user.encrypted,
+      });
+
+      if (!ifPasswordMatch) {
+        return {
+          status: 400,
+          message: "Login failed. Either password or email is incorrect",
+        };
+      }
+
+      const accessToken = jwt.sign(
+        {
+          id: user.id,
+        },
+        process.env.JWT_SEC,
+        { expiresIn: "1d" }
+      );
+
+      const { password, ...others } = user.toObject();
+      return {
+        status: 200,
+        message: "Login successful",
+        data: {
+          user: others,
+          access_token: accessToken,
+        },
+      };
+    } catch (error) {
+      Logger.debug(error);
+      return {
+        status: 500,
+        message: "User Login Failed",
+        error: {
+          errors: {
+            details: error,
+          },
+        },
+      };
+    }
+  }
 }
