@@ -1,10 +1,14 @@
 import Logger from "../../application/middleware/loggers/logger";
 import { generateSecurePasswords } from "../../application/utils/helpers";
-import { RegisterInput } from "../../domain/core/validators/auth.validators";
+import {
+  LoginInput,
+  RegisterInput,
+} from "../../domain/core/validators/auth.validators";
 const User = require("./../../presentation/rest/model/User.model");
 export default class AuthRepository {
   constructor() {}
 
+  //   Route for Register
   async register(input: RegisterInput) {
     try {
       const hashed = await generateSecurePasswords(input.password);
@@ -37,4 +41,7 @@ export default class AuthRepository {
       };
     }
   }
+
+  //   Route for logging in
+  async login(input: LoginInput) {}
 }
