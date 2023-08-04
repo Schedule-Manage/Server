@@ -9,6 +9,6 @@ export default class AppRouter {
   }
 
   private config() {
-    this.router.use("/auth, ")
+    this.router.use("/auth", new AuthModule().router )
   }
 }
