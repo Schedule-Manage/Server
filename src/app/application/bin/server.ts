@@ -17,9 +17,6 @@ const runServer = () => {
   app.use(express.json());
 
   // setup routes
-  app.post("/register", (req, res) => {
-    console.log(req.body)
-  });
   app.use("/api/v1/", new AppRouter().router);
 
   return { app };

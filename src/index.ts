@@ -19,3 +19,5 @@ const main = () => {
     Logger.info(`Running on 👉🏼 ${host}: ${port} `);
   });
 };
+
+main()
