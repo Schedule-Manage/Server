@@ -73,7 +73,7 @@ export default class AuthRepository {
           id: user.id,
         },
         process.env.JWT_SEC,
-        { expiresIn: "1d" }
+        { expiresIn: "1d" } 
       );
 
       const { password, ...others } = user.toObject();
