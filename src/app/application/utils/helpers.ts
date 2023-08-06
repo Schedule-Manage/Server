@@ -1,5 +1,6 @@
 import cors from "cors";
 import bcrypt from "bcrypt";
+const CryptoJS = require("crypto-js");
 import { PasswordCompareInput } from "../../../../types";
 // import jwt from "jsonwebtoken";
 
