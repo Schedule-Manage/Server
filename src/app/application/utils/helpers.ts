@@ -36,7 +36,6 @@ const generateSecurePasswords = async (password: string) => {
  */
 const comparePasswords = async (input: PasswordCompareInput) => {
   const result = await bcrypt.compare(input.password, input.encrypted);
-
   return result;
 };
 

@@ -20,3 +20,4 @@ const main = () => {
         logger_1.default.info(`Running on 👉🏼 ${host}: ${port} `);
     });
 };
+main();
