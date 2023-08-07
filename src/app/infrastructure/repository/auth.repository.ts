@@ -10,17 +10,23 @@ import {
 const User = require("./../../presentation/rest/model/User.model");
 
 const jwt = require("jsonwebtoken");
+const CryptoJS = require("crypto-js");
 export default class AuthRepository {
   constructor() {}
 
   //   Route for Register
   async register(input: RegisterInput) {
     try {
-      const hashed = await generateSecurePasswords(input.password);
+      if(input.password !== input.password_confirmation){
+        return {
+          status: 400,
+          message: "Password do not match"
+        }
+      }
       const newUser = new User({
         names: input.names,
         email: input.email,
-        password: hashed,
+        password: CryptoJS.SHA256(input.password).toString(),
       });
       const savedUser = await newUser.save();
       return {
@@ -52,14 +58,19 @@ export default class AuthRepository {
     try {
       const user = await User.findOne({ email: input.email });
 
+      // If user does not exist
+      if (!user) {
+        return {
+          status: 400,
+          message: "Either password or email is incorrect",
+        };
+      }
+
+      const hashed = CryptoJS.SHA256(input.password).toString();
       if (!user) {
         return { status: 400, message: "Wrong Credentials!" };
       }
-
-      const ifPasswordMatch = await comparePasswords({
-        password: input.password,
-        encrypted: user.encrypted,
-      });
+      const ifPasswordMatch = user.password === hashed ? true : false;
 
       if (!ifPasswordMatch) {
         return {
@@ -68,12 +79,13 @@ export default class AuthRepository {
         };
       }
 
+      // generating access token
       const accessToken = jwt.sign(
         {
           id: user.id,
         },
         process.env.JWT_SEC,
-        { expiresIn: "1d" } 
+        { expiresIn: "1d" }
       );
 
       const { password, ...others } = user.toObject();
