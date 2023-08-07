@@ -1,7 +1,9 @@
 import { Request, Response, Router } from "express";
-import { LoginInput, RegisterInput } from "../../../domain/core/validators/auth.validators";
+import {
+  LoginInput,
+  RegisterInput,
+} from "../../../domain/core/validators/auth.validators";
 import AuthUsecase from "../../../application/usecases/auth.usecases";
-const User = require("./../model/User.model");
 
 const usecase: AuthUsecase = new AuthUsecase();
 export default class AuthModule {
@@ -18,6 +20,9 @@ export default class AuthModule {
 
     // Login route
     this.router.post("/login", this.login);
+
+    // Password reset route
+    this.router.post("/forgot/password", this.forgotPassword);
   }
 
   private async register(req: Request, res: Response) {
@@ -27,8 +32,19 @@ export default class AuthModule {
   }
 
   private async login(req: Request, res: Response) {
-    const payload: LoginInput = req.body
+    const payload: LoginInput = req.body;
     const response = await usecase.login(payload);
-    return res.json(response)
+    return res.json(response);
+  }
+
+  /**
+   * Forgot Password
+   * @param req
+   * @param res
+   */
+  private async forgotPassword(req: Request, res: Response) {
+    const {email} = req.body
+    const response = await usecase.forgotPassword(email)
+    return res.status(response.status).json(response)
   }
 }

@@ -1,3 +1,4 @@
+import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
 import {
   comparePasswords,
@@ -17,11 +18,11 @@ export default class AuthRepository {
   //   Route for Register
   async register(input: RegisterInput) {
     try {
-      if(input.password !== input.password_confirmation){
+      if (input.password !== input.password_confirmation) {
         return {
           status: 400,
-          message: "Password do not match"
-        }
+          message: "Password do not match",
+        };
       }
       const newUser = new User({
         names: input.names,
@@ -109,5 +110,13 @@ export default class AuthRepository {
         },
       };
     }
+  }
+
+  // Forgot password
+  async forgotPassword(email: string): Promise<ServerResponse<void>> {
+    return {
+      status: 200,
+      message: email
+    };
   }
 }
