@@ -82,7 +82,13 @@ export default class AuthRepository {
           id: user.id,
         },
         process.env.JWT_SEC,
-        { expiresIn: "1d" }
+        { expiresIn: "12h" }
+      );
+
+      // generate refresh token
+      const refreshToken = jwt.sign(
+        user.names,
+        process.env.JWT_REFRESH_TOKEN_SECRET
       );
 
       const { password, ...others } = user.toObject();
