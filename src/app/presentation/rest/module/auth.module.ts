@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import {
   LoginInput,
   RegisterInput,
+  authenticateRequest,
 } from "../../../domain/core/validators/auth.validators";
 import AuthUsecase from "../../../application/usecases/auth.usecases";
 
@@ -22,7 +23,7 @@ export default class AuthModule {
     this.router.post("/login", this.login);
 
     // Password reset route
-    this.router.post("/forgot/password", this.forgotPassword);
+    this.router.post("/forgot/password",authenticateRequest(), this.forgotPassword);
   }
 
   private async register(req: Request, res: Response) {

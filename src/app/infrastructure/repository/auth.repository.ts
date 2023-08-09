@@ -1,10 +1,6 @@
 import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
 import {
-  comparePasswords,
-  generateSecurePasswords,
-} from "../../application/utils/helpers";
-import {
   LoginInput,
   RegisterInput,
 } from "../../domain/core/validators/auth.validators";
@@ -116,7 +112,7 @@ export default class AuthRepository {
   async forgotPassword(email: string): Promise<ServerResponse<void>> {
     return {
       status: 200,
-      message: email
+      message: email,
     };
   }
 }
