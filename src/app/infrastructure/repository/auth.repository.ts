@@ -98,6 +98,7 @@ export default class AuthRepository {
         data: {
           user: others,
           access_token: accessToken,
+          refresh_token: refreshToken,
         },
       };
     } catch (error) {
