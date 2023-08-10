@@ -1,8 +1,5 @@
+import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
-import {
-  comparePasswords,
-  generateSecurePasswords,
-} from "../../application/utils/helpers";
 import {
   LoginInput,
   RegisterInput,
@@ -17,11 +14,11 @@ export default class AuthRepository {
   //   Route for Register
   async register(input: RegisterInput) {
     try {
-      if(input.password !== input.password_confirmation){
+      if (input.password !== input.password_confirmation) {
         return {
           status: 400,
-          message: "Password do not match"
-        }
+          message: "Password do not match",
+        };
       }
       const newUser = new User({
         names: input.names,
@@ -85,7 +82,13 @@ export default class AuthRepository {
           id: user.id,
         },
         process.env.JWT_SEC,
-        { expiresIn: "1d" }
+        { expiresIn: "12h" }
+      );
+
+      // generate refresh token
+      const refreshToken = jwt.sign(
+        user.names,
+        process.env.JWT_REFRESH_TOKEN_SECRET
       );
 
       const { password, ...others } = user.toObject();
@@ -95,6 +98,7 @@ export default class AuthRepository {
         data: {
           user: others,
           access_token: accessToken,
+          refresh_token: refreshToken,
         },
       };
     } catch (error) {
@@ -109,5 +113,13 @@ export default class AuthRepository {
         },
       };
     }
+  }
+
+  // Forgot password
+  async forgotPassword(email: string): Promise<ServerResponse<void>> {
+    return {
+      status: 200,
+      message: email,
+    };
   }
 }
