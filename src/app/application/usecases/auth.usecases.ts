@@ -22,4 +22,5 @@ export default class AuthUsecase {
   async forgotPassword(email: string) {
     return await this.repository.forgotPassword(email);
   }
+  
 }

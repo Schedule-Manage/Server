@@ -22,8 +22,15 @@ export default class AuthModule {
     // Login route
     this.router.post("/login", this.login);
 
-    // Password reset route
-    this.router.post("/forgot/password",authenticateRequest(), this.forgotPassword);
+    // Password forgot route
+    this.router.post("/forgot/password", this.forgotPassword);
+
+    // Password Reset route
+    this.router.post(
+      "/update/password",
+      authenticateRequest(),
+      this.updatePassword
+    );
   }
 
   private async register(req: Request, res: Response) {
@@ -39,13 +46,29 @@ export default class AuthModule {
   }
 
   /**
+   * Update Profile information
+   * @param req
+   * @param res
+   */
+  private async updatePassword(req: Request, res: Response) {
+    const { uid, currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    const response = await usecase.updatePassword({
+      id: uid,
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    });
+  }
+
+  /**
    * Forgot Password
    * @param req
    * @param res
    */
   private async forgotPassword(req: Request, res: Response) {
-    const {email} = req.body
-    const response = await usecase.forgotPassword(email)
-    return res.status(response.status).json(response)
+    const { email } = req.body;
+    const response = await usecase.forgotPassword(email);
+    return res.status(response.status).json(response);
   }
 }
