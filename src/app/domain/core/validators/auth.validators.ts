@@ -65,3 +65,25 @@ export const authenticateRequest = () => {
 };
 
 export type LoginInput = yup.InferType<typeof loginValidationSchema>;
+
+
+// Parameters needed for password reset
+export const passwordResetValidationSchema = yup.object({
+  currentPassword: yup.string().required("Password is required"),
+
+  newPassword: yup.string().required("Password is required"),
+
+  confirmNewPassword: yup
+    .string()
+    .oneOf([
+      yup.ref("new_password"),
+      "Password confirmation should match the password field",
+    ])
+    .required("Password confirmation is required"),
+});
+
+export type PasswordResetInput = yup.InferType<
+  typeof passwordResetValidationSchema
+> & {
+  id: string;
+};

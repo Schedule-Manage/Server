@@ -2,6 +2,7 @@ import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
 import {
   LoginInput,
+  PasswordResetInput,
   RegisterInput,
 } from "../../domain/core/validators/auth.validators";
 const User = require("./../../presentation/rest/model/User.model");
@@ -121,5 +122,32 @@ export default class AuthRepository {
       status: 200,
       message: email,
     };
+  }
+
+  // Reset Password
+  async updatePassword(input: PasswordResetInput) {
+    try {
+      const hashed = CryptoJS.SHA256(input.newPassword).toString();
+      const user = await User.findOne({ id: input.id });
+      if (user) {
+        user.password = hashed;
+        user.save();
+        return {
+          status: 200,
+          message: "Password updated successful",
+        };
+      }
+    } catch (error) {
+      Logger.debug(error);
+      return {
+        status: 500,
+        message: "User Login Failed",
+        error: {
+          errors: {
+            details: error,
+          },
+        },
+      };
+    }
   }
 }

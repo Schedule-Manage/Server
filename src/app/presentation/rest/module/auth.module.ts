@@ -28,10 +28,20 @@ export default class AuthModule {
     // Password Reset route
     this.router.post(
       "/update/password",
-      authenticateRequest(),
+      // authenticateRequest(),
       this.updatePassword
     );
   }
+
+  /**
+   * forgot/password
+   * {
+  "names": "coder",
+  "email": "coders@gmail.com",
+  "password": "coders",
+  "password_confirmation": "coder"
+}
+   */
 
   private async register(req: Request, res: Response) {
     const payload: RegisterInput = req.body;
@@ -59,6 +69,8 @@ export default class AuthModule {
       newPassword,
       confirmNewPassword,
     });
+
+    return res.status(response!.status).json(response);
   }
 
   /**

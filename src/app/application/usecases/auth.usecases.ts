@@ -1,5 +1,6 @@
 import {
   LoginInput,
+  PasswordResetInput,
   RegisterInput,
 } from "../../domain/core/validators/auth.validators";
 import AuthRepository from "../../infrastructure/repository/auth.repository";
@@ -22,5 +23,8 @@ export default class AuthUsecase {
   async forgotPassword(email: string) {
     return await this.repository.forgotPassword(email);
   }
-  
+
+  async updatePassword(input: PasswordResetInput){
+    return await this.repository.updatePassword(input)
+  }
 }
