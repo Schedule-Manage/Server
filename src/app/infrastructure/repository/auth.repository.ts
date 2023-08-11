@@ -1,5 +1,6 @@
 import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
+import { transporter } from "../../application/utils/helpers";
 import {
   LoginInput,
   PasswordResetInput,
@@ -9,6 +10,8 @@ const User = require("./../../presentation/rest/model/User.model");
 
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
+require("dotenv").config();
+
 export default class AuthRepository {
   constructor() {}
 
@@ -27,6 +30,17 @@ export default class AuthRepository {
         password: CryptoJS.SHA256(input.password).toString(),
       });
       const savedUser = await newUser.save();
+
+      const info = await transporter.sendMail({
+        from: process.env.GMAIL_NAME,
+        to: `${newUser.email}`,
+        subject: "Hello ✔",
+        text: "Hello world?",
+        html: "<b>Hello world?</b>",
+      });
+
+      console.log("Message sent: %s", info.messageId);
+
       return {
         status: 201,
         message:
