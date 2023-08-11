@@ -76,7 +76,7 @@ export const passwordResetValidationSchema = yup.object({
   confirmNewPassword: yup
     .string()
     .oneOf([
-      yup.ref("new_password"),
+      yup.ref("newPassword"),
       "Password confirmation should match the password field",
     ])
     .required("Password confirmation is required"),

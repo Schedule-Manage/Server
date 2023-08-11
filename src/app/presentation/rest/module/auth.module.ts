@@ -28,7 +28,7 @@ export default class AuthModule {
     // Password Reset route
     this.router.post(
       "/update/password",
-      // authenticateRequest(),
+      authenticateRequest(),
       this.updatePassword
     );
   }
