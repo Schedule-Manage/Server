@@ -10,6 +10,10 @@ const User = require("./../../presentation/rest/model/User.model");
 
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
+
+const ejs = require("ejs");
+const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
 export default class AuthRepository {
@@ -31,12 +35,20 @@ export default class AuthRepository {
       });
       const savedUser = await newUser.save();
 
+      // For sending email
+      const filePath = path.join(
+        __dirname,
+        "../../../app/presentation/templates/email/verification.ejs"
+      );
+
+      let html = await ejs.renderFile(filePath);
+
       const info = await transporter.sendMail({
         from: process.env.GMAIL_NAME,
-        to: `${newUser.email}`,
-        subject: "Hello ✔",
-        text: "Hello world?",
-        html: "<b>Hello world?</b>",
+        to: `${input.email}`,
+        subject: "Welcome to Schedule Management Service",
+        text: `Hello ${input.names}`,
+        html: html,
       });
 
       console.log("Message sent: %s", info.messageId);
