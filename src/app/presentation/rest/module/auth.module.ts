@@ -22,9 +22,26 @@ export default class AuthModule {
     // Login route
     this.router.post("/login", this.login);
 
-    // Password reset route
-    this.router.post("/forgot/password",authenticateRequest(), this.forgotPassword);
+    // Password forgot route
+    this.router.post("/forgot/password", this.forgotPassword);
+
+    // Password Reset route
+    this.router.post(
+      "/update/password",
+      authenticateRequest(),
+      this.updatePassword
+    );
   }
+
+  /**
+   * forgot/password
+   * {
+  "names": "coder",
+  "email": "coders@gmail.com",
+  "password": "coders",
+  "password_confirmation": "coder"
+}
+   */
 
   private async register(req: Request, res: Response) {
     const payload: RegisterInput = req.body;
@@ -39,13 +56,31 @@ export default class AuthModule {
   }
 
   /**
+   * Update Profile information
+   * @param req
+   * @param res
+   */
+  private async updatePassword(req: Request, res: Response) {
+    const { uid, currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    const response = await usecase.updatePassword({
+      id: uid,
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    });
+
+    return res.status(response!.status).json(response);
+  }
+
+  /**
    * Forgot Password
    * @param req
    * @param res
    */
   private async forgotPassword(req: Request, res: Response) {
-    const {email} = req.body
-    const response = await usecase.forgotPassword(email)
-    return res.status(response.status).json(response)
+    const { email } = req.body;
+    const response = await usecase.forgotPassword(email);
+    return res.status(response.status).json(response);
   }
 }

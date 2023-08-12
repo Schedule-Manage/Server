@@ -1,13 +1,17 @@
 import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
+import { transporter } from "../../application/utils/helpers";
 import {
   LoginInput,
+  PasswordResetInput,
   RegisterInput,
 } from "../../domain/core/validators/auth.validators";
 const User = require("./../../presentation/rest/model/User.model");
 
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
+require("dotenv").config();
+
 export default class AuthRepository {
   constructor() {}
 
@@ -26,6 +30,17 @@ export default class AuthRepository {
         password: CryptoJS.SHA256(input.password).toString(),
       });
       const savedUser = await newUser.save();
+
+      const info = await transporter.sendMail({
+        from: process.env.GMAIL_NAME,
+        to: `${newUser.email}`,
+        subject: "Hello ✔",
+        text: "Hello world?",
+        html: "<b>Hello world?</b>",
+      });
+
+      console.log("Message sent: %s", info.messageId);
+
       return {
         status: 201,
         message:
@@ -121,5 +136,32 @@ export default class AuthRepository {
       status: 200,
       message: email,
     };
+  }
+
+  // Reset Password
+  async updatePassword(input: PasswordResetInput) {
+    try {
+      const hashed = CryptoJS.SHA256(input.newPassword).toString();
+      const user = await User.findOne({ id: input.id });
+      if (user) {
+        user.password = hashed;
+        user.save();
+        return {
+          status: 200,
+          message: "Password updated successful",
+        };
+      }
+    } catch (error) {
+      Logger.debug(error);
+      return {
+        status: 500,
+        message: "User Login Failed",
+        error: {
+          errors: {
+            details: error,
+          },
+        },
+      };
+    }
   }
 }
