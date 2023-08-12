@@ -41,7 +41,9 @@ export default class AuthRepository {
         "../../../app/presentation/templates/email/verification.ejs"
       );
 
-      let html = await ejs.renderFile(filePath);
+      let html = await ejs.renderFile(filePath, {
+        names: input.names,
+      });
 
       const info = await transporter.sendMail({
         from: process.env.GMAIL_NAME,
@@ -144,9 +146,46 @@ export default class AuthRepository {
 
   // Forgot password
   async forgotPassword(email: string): Promise<ServerResponse<void>> {
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+      // Generating reset token
+      const resetToken = jwt.sign(
+        {
+          email: user.email,
+        },
+        process.env.JWT_SEC,
+        { expiresIn: "12h" }
+      );
+      user.resetToken = resetToken;
+
+      // For sending email
+      const filePath = path.join(
+        __dirname,
+        "../../../app/presentation/templates/email/passwordforgot.ejs"
+      );
+
+      let html = await ejs.renderFile(filePath, {
+        verification: resetToken,
+      });
+
+      const info = await transporter.sendMail({
+        from: process.env.GMAIL_NAME,
+        to: email,
+        subject: "Forgot Your Password",
+        html: html,
+      });
+
+      console.log("Message sent: %s", info.messageId);
+      return {
+        status: 200,
+        message:
+          "Request has been recieved. An email has been sent with the reset token",
+      };
+    }
     return {
-      status: 200,
-      message: email,
+      status: 401,
+      message: "Email not found or invalid",
     };
   }
 
@@ -157,6 +196,26 @@ export default class AuthRepository {
       const user = await User.findOne({ id: input.id });
       if (user) {
         user.password = hashed;
+
+        const filePath = path.join(
+          __dirname,
+          "../../../app/presentation/templates/email/passwordforgot.ejs"
+        );
+
+        let html = await ejs.renderFile(filePath, {
+          verification: hashed,
+        });
+
+        const info = await transporter.sendMail({
+          from: process.env.GMAIL_NAME,
+          to: `${user.email}`,
+          subject: "Password Reset",
+          text: `Hello ${user.names}`,
+          html: html,
+        });
+
+        console.log("Message sent: %s", info.messageId);
+
         user.save();
         return {
           status: 200,
@@ -177,3 +236,22 @@ export default class AuthRepository {
     }
   }
 }
+
+/**
+ * 
+ * {
+  "email":"ceoian848@gmail.com",
+  "names":"Ian Kamau",
+  "password":"ianoz",
+  "password_confirmation":"ianoz"
+}
+ */
+
+/**
+ * 
+ * {
+  "currentPassword":"ianoz",
+  "newPassword":"ianoz",
+  "confirmNewPassword":"ianoz"
+}
+ */
