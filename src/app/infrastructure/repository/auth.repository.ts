@@ -1,6 +1,6 @@
 import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
-import { transporter } from "../../application/utils/helpers";
+import { generateRandomString, transporter } from "../../application/utils/helpers";
 import {
   LoginInput,
   PasswordResetInput,
@@ -147,17 +147,12 @@ export default class AuthRepository {
   // Forgot password
   async forgotPassword(email: string): Promise<ServerResponse<void>> {
     const user = await User.findOne({ email: email });
+    
+
+    const randomString = generateRandomString(8);
 
     if (user) {
-      // Generating reset token
-      const resetToken = jwt.sign(
-        {
-          email: user.email,
-        },
-        process.env.JWT_SEC,
-        { expiresIn: "12h" }
-      );
-      user.resetToken = resetToken;
+      user.resetToken = randomString;
 
       // For sending email
       const filePath = path.join(
@@ -166,7 +161,7 @@ export default class AuthRepository {
       );
 
       let html = await ejs.renderFile(filePath, {
-        verification: resetToken,
+        verification: randomString,
       });
 
       const info = await transporter.sendMail({
