@@ -1,6 +1,9 @@
 import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
-import { generateRandomString, transporter } from "../../application/utils/helpers";
+import {
+  generateRandomString,
+  transporter,
+} from "../../application/utils/helpers";
 import {
   LoginInput,
   PasswordResetInput,
@@ -13,7 +16,6 @@ const CryptoJS = require("crypto-js");
 
 const ejs = require("ejs");
 const path = require("path");
-const fs = require("fs");
 require("dotenv").config();
 
 export default class AuthRepository {
@@ -147,12 +149,12 @@ export default class AuthRepository {
   // Forgot password
   async forgotPassword(email: string): Promise<ServerResponse<void>> {
     const user = await User.findOne({ email: email });
-    
 
     const randomString = generateRandomString(8);
 
     if (user) {
       user.resetToken = randomString;
+      user.save();
 
       // For sending email
       const filePath = path.join(
@@ -160,6 +162,7 @@ export default class AuthRepository {
         "../../../app/presentation/templates/email/passwordforgot.ejs"
       );
 
+      // rendering the ejs file and passing the "verification" parameter"
       let html = await ejs.renderFile(filePath, {
         verification: randomString,
       });
