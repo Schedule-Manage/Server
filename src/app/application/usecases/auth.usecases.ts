@@ -24,7 +24,11 @@ export default class AuthUsecase {
     return await this.repository.forgotPassword(email);
   }
 
-  async updatePassword(input: PasswordResetInput){
-    return await this.repository.updatePassword(input)
+  async updatePassword(input: PasswordResetInput) {
+    return await this.repository.updatePassword(input);
+  }
+
+  async resetToken(token: string){
+    return await this.repository.resetToken(token);
   }
 }

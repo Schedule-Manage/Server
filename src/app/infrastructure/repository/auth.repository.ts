@@ -187,6 +187,41 @@ export default class AuthRepository {
     };
   }
 
+  async resetToken(token: string): Promise<ServerResponse<void>> {
+    try {
+      const user = await User.findOne({ resetToken: token });
+      if (user) {
+
+        const accessToken = jwt.sign(
+          {
+            id: user.id,
+          },
+          process.env.JWT_SEC,
+          { expiresIn: "12h" }
+        );
+        return {
+          status: 200,
+          message: "User found",
+          data: accessToken,
+        };
+      }
+      return {
+        status: 200,
+        message: "User not found",
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: "Action error",
+        error: {
+          errors: {
+            details: error,
+          },
+        },
+      };
+    }
+  }
+
   // Reset Password
   async updatePassword(input: PasswordResetInput) {
     try {

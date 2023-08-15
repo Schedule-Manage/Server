@@ -31,6 +31,12 @@ export default class AuthModule {
       authenticateRequest(),
       this.updatePassword
     );
+
+    /**
+     * Route that handles forgot password by taking the reset token
+     */
+
+    this.router.post("/reset/token", this.resetToken);
   }
 
   /**
@@ -81,6 +87,17 @@ export default class AuthModule {
   private async forgotPassword(req: Request, res: Response) {
     const { email } = req.body;
     const response = await usecase.forgotPassword(email);
+    return res.status(response.status).json(response);
+  }
+
+  /**
+   * Reset token for forgot password
+   * @param {req}
+   * @return {res}
+   */
+  private async resetToken(req: Request, res: Response) {
+    const { token } = req.body;
+    const response = await usecase.resetToken(token);
     return res.status(response.status).json(response);
   }
 }
