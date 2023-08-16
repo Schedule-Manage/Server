@@ -191,7 +191,6 @@ export default class AuthRepository {
     try {
       const user = await User.findOne({ resetToken: token });
       if (user) {
-
         const accessToken = jwt.sign(
           {
             id: user.id,
@@ -225,9 +224,11 @@ export default class AuthRepository {
   // Reset Password
   async updatePassword(input: PasswordResetInput) {
     try {
-      const hashed = CryptoJS.SHA256(input.newPassword).toString();
-      const user = await User.findOne({ id: input.id });
+      console.log(input)
+      const user = await User.findOne({ _id: input.id });
       if (user) {
+        console.log("found")
+        const hashed = CryptoJS.SHA256(input.newPassword).toString();
         user.password = hashed;
 
         const filePath = path.join(
@@ -235,9 +236,7 @@ export default class AuthRepository {
           "../../../app/presentation/templates/email/passwordforgot.ejs"
         );
 
-        let html = await ejs.renderFile(filePath, {
-          verification: hashed,
-        });
+        let html = await ejs.renderFile(filePath);
 
         const info = await transporter.sendMail({
           from: process.env.GMAIL_NAME,
@@ -248,8 +247,9 @@ export default class AuthRepository {
         });
 
         console.log("Message sent: %s", info.messageId);
+        user.resetToken = undefined;
 
-        user.save();
+        await user.save();
         return {
           status: 200,
           message: "Password updated successful",
@@ -259,7 +259,7 @@ export default class AuthRepository {
       Logger.debug(error);
       return {
         status: 500,
-        message: "User Login Failed",
+        message: "Action Failed",
         error: {
           errors: {
             details: error,

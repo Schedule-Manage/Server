@@ -30,6 +30,7 @@ export const authenticateRequest = () => {
   return async (req: any, res: any, next: NextFunction) => {
     try {
       if (req.headers.authorization != null) {
+        const { newPassword } = req.body;
         const bearer: string = req.headers.authorization;
         const token = bearer.split(" ")[1];
         jwt.verify(token, process.env.JWT_SEC, async (err: any, user: any) => {
@@ -47,7 +48,7 @@ export const authenticateRequest = () => {
           req.user = user;
           req.body = {
             user_id: userProfile.id,
-            userProfile,
+            newPassword,
           };
 
           return next();

@@ -67,10 +67,10 @@ export default class AuthModule {
    * @param res
    */
   private async updatePassword(req: Request, res: Response) {
-    const { uid, currentPassword, newPassword, confirmNewPassword } = req.body;
+    const { user_id, currentPassword, newPassword, confirmNewPassword } = req.body;
 
     const response = await usecase.updatePassword({
-      id: uid,
+      id: user_id,
       currentPassword,
       newPassword,
       confirmNewPassword,
