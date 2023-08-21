@@ -1,5 +1,6 @@
 import { Router } from "express";
 import AuthModule from "./module/auth.module";
+import MusicModule from "./module/Music.module";
 
 export default class AppRouter {
   public router: Router;
@@ -10,6 +11,10 @@ export default class AppRouter {
   }
 
   private config() {
-    this.router.use("/auth", new AuthModule().router )
+    // For routing
+    this.router.use("/auth", new AuthModule().router ),
+
+    // For uploading music files
+    this.router.use("/music", new MusicModule().router)
   }
 }
