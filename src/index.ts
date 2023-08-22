@@ -16,8 +16,8 @@ const main = () => {
 
   app.listen(port, () => {
     Logger.debug("Server started");
-    Logger.info(`Running on 👉🏼 ${host}: ${port} `);
+    Logger.info(`Running on 👉🏼 ${host}:${port} `);
   });
 };
 
-main()
+main();

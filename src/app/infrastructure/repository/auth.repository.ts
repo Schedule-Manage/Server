@@ -1,6 +1,9 @@
 import { ServerResponse } from "../../../../types";
 import Logger from "../../application/middleware/loggers/logger";
-import { transporter } from "../../application/utils/helpers";
+import {
+  generateRandomString,
+  transporter,
+} from "../../application/utils/helpers";
 import {
   LoginInput,
   PasswordResetInput,
@@ -10,6 +13,9 @@ const User = require("./../../presentation/rest/model/User.model");
 
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
+
+const ejs = require("ejs");
+const path = require("path");
 require("dotenv").config();
 
 export default class AuthRepository {
@@ -31,12 +37,22 @@ export default class AuthRepository {
       });
       const savedUser = await newUser.save();
 
+      // For sending email
+      const filePath = path.join(
+        __dirname,
+        "../../../app/presentation/templates/email/verification.ejs"
+      );
+
+      let html = await ejs.renderFile(filePath, {
+        names: input.names,
+      });
+
       const info = await transporter.sendMail({
         from: process.env.GMAIL_NAME,
-        to: `${newUser.email}`,
-        subject: "Hello ✔",
-        text: "Hello world?",
-        html: "<b>Hello world?</b>",
+        to: `${input.email}`,
+        subject: "Welcome to Schedule Management Service",
+        text: `Hello ${input.names}`,
+        html: html,
       });
 
       console.log("Message sent: %s", info.messageId);
@@ -132,20 +148,108 @@ export default class AuthRepository {
 
   // Forgot password
   async forgotPassword(email: string): Promise<ServerResponse<void>> {
+    const user = await User.findOne({ email: email });
+
+    const randomString = generateRandomString(8);
+
+    if (user) {
+      user.resetToken = randomString;
+      user.save();
+
+      // For sending email
+      const filePath = path.join(
+        __dirname,
+        "../../../app/presentation/templates/email/passwordforgot.ejs"
+      );
+
+      // rendering the ejs file and passing the "verification" parameter"
+      let html = await ejs.renderFile(filePath, {
+        verification: randomString,
+      });
+
+      const info = await transporter.sendMail({
+        from: process.env.GMAIL_NAME,
+        to: email,
+        subject: "Forgot Your Password",
+        html: html,
+      });
+
+      console.log("Message sent: %s", info.messageId);
+      return {
+        status: 200,
+        message:
+          "Request has been recieved. An email has been sent with the reset token",
+      };
+    }
     return {
-      status: 200,
-      message: email,
+      status: 401,
+      message: "Email not found or invalid",
     };
+  }
+
+  async resetToken(token: string): Promise<ServerResponse<void>> {
+    try {
+      const user = await User.findOne({ resetToken: token });
+      if (user) {
+        const accessToken = jwt.sign(
+          {
+            id: user.id,
+          },
+          process.env.JWT_SEC,
+          { expiresIn: "12h" }
+        );
+        return {
+          status: 200,
+          message: "User found",
+          data: accessToken,
+        };
+      }
+      return {
+        status: 200,
+        message: "User not found",
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: "Action error",
+        error: {
+          errors: {
+            details: error,
+          },
+        },
+      };
+    }
   }
 
   // Reset Password
   async updatePassword(input: PasswordResetInput) {
     try {
-      const hashed = CryptoJS.SHA256(input.newPassword).toString();
-      const user = await User.findOne({ id: input.id });
+      console.log(input)
+      const user = await User.findOne({ _id: input.id });
       if (user) {
+        console.log("found")
+        const hashed = CryptoJS.SHA256(input.newPassword).toString();
         user.password = hashed;
-        user.save();
+
+        const filePath = path.join(
+          __dirname,
+          "../../../app/presentation/templates/email/passwordforgot.ejs"
+        );
+
+        let html = await ejs.renderFile(filePath);
+
+        const info = await transporter.sendMail({
+          from: process.env.GMAIL_NAME,
+          to: `${user.email}`,
+          subject: "Password Reset",
+          text: `Hello ${user.names}`,
+          html: html,
+        });
+
+        console.log("Message sent: %s", info.messageId);
+        user.resetToken = undefined;
+
+        await user.save();
         return {
           status: 200,
           message: "Password updated successful",
@@ -155,7 +259,7 @@ export default class AuthRepository {
       Logger.debug(error);
       return {
         status: 500,
-        message: "User Login Failed",
+        message: "Action Failed",
         error: {
           errors: {
             details: error,
@@ -165,3 +269,22 @@ export default class AuthRepository {
     }
   }
 }
+
+/**
+ * 
+ * {
+  "email":"ceoian848@gmail.com",
+  "names":"Ian Kamau",
+  "password":"ianoz",
+  "password_confirmation":"ianoz"
+}
+ */
+
+/**
+ * 
+ * {
+  "currentPassword":"ianoz",
+  "newPassword":"ianoz",
+  "confirmNewPassword":"ianoz"
+}
+ */
