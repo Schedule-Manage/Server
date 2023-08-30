@@ -7,14 +7,14 @@ const trackSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    album_id: [{ type: Schema.Types.ObjectId, ref: "Album" }],
+    // album_id: [{ type: Schema.Types.ObjectId, ref: "Album" }],
     duration: {
       type: Number,
       required: true,
     },
     audio_url: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
