@@ -7,14 +7,27 @@ const trackSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // album_id: [{ type: Schema.Types.ObjectId, ref: "Album" }],
-    duration: {
+    artist: {
+      defaultValue: "Unknown",
+      type: String,
+      required: false,
+    },
+    size: {
       type: Number,
       required: true,
     },
-    audio_url: {
+    mimetype: {
+      type: String,
+      required: true,
+    },
+    album: {
+      defaultValue: "Unknown",
       type: String,
       required: false,
+    },
+    audio_url: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

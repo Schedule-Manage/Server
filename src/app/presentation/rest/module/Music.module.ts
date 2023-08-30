@@ -23,7 +23,7 @@ export default class MusicModule {
   }
 
   private async upload(req: Request, res: Response) {
-    const payload = req.body;
+    const payload = req.file;
     const response = await usecase.upload(payload);
 
     return res.json(response);

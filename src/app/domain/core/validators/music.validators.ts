@@ -21,16 +21,6 @@ export const TrackValidationSchema = yup.object({
 
 export type TrackInput = yup.InferType<typeof TrackValidationSchema>;
 
-// export const fileStorageEngine = multer.diskStorage({
-//   destination: (req: any, file: any, cb: any) => {
-//     cb(null, "./images");
-//   },
-//   filename: (req: any, file: any, cb: any) => {
-//     var imageUrl = file.fieldname + "-" + Date.now() + ".jpg";
-//     cb(null, imageUrl);
-//   },
-// });
-
 export const fileStorageEngine = multer.diskStorage({
   destination: (req: any, file: any, cb: any) => {
     const dir = "./images";
@@ -42,7 +32,6 @@ export const fileStorageEngine = multer.diskStorage({
   },
 
   filename: (req: any, file: any, cb: any) => {
-    var imageUrl = file.fieldname + "-" + Date.now() + ".jpg";
     cb(null, file.originalname);
   },
 });
