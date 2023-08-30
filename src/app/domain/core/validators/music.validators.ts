@@ -43,6 +43,6 @@ export const fileStorageEngine = multer.diskStorage({
 
   filename: (req: any, file: any, cb: any) => {
     var imageUrl = file.fieldname + "-" + Date.now() + ".jpg";
-    cb(null, imageUrl);
+    cb(null, file.originalname);
   },
 });
