@@ -1,7 +1,8 @@
 import { Request, Response, Router } from "express";
 import {
   TrackInput,
-  fileStorageEngine} from "../../../domain/core/validators/music.validators";
+  fileStorageEngine,
+} from "../../../domain/core/validators/music.validators";
 import MusicUsecase from "../../../application/usecases/music.usecases";
 const multer = require("multer");
 

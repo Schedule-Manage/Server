@@ -1,6 +1,7 @@
 import { NextFunction } from "express";
 const multer = require("multer");
 import fs from "fs";
+import path from "path";
 import * as yup from "yup";
 
 export const TrackValidationSchema = yup.object({
@@ -32,6 +33,6 @@ export const fileStorageEngine = multer.diskStorage({
   },
 
   filename: (req: any, file: any, cb: any) => {
-    cb(null, file.originalname);
+    return cb(null, file.originalname);
   },
 });
