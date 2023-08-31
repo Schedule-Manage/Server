@@ -3,6 +3,7 @@ import Logger from "../../application/middleware/loggers/logger";
 
 // Importing the Music database
 const Track = require("./../../presentation/rest/model/music/Music.model");
+const fs = require("fs")
 export default class MusicRepository {
   constructor() {}
 
@@ -29,6 +30,37 @@ export default class MusicRepository {
       return {
         status: 500,
         message: "Music upload cannot be completed at the moment",
+        error: {
+          errors: {
+            details: error,
+          },
+        },
+      };
+    }
+  }
+
+  async getMusic(){
+    try {
+
+      const files = fs.readdir("./music", function (err: any, files: any) {
+        //handling error
+        if (err) {
+          return console.log("Unable to scan directory: " + err);
+        }
+        //listing all files using forEach
+        files.forEach(function (file: any) {
+          return file
+        });
+        return {
+          status: 200,
+          message: files,
+        };
+      });
+      
+    } catch (error) {
+      return {
+        status: 500,
+        message: "Request cannot be completed at this time",
         error: {
           errors: {
             details: error,

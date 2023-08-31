@@ -21,6 +21,9 @@ export default class MusicModule {
   private config() {
     // Router for Uploading music
     this.router.post("/upload", uploadImg.single("music"), this.upload);
+
+    // Getting all music
+    this.router.get("/", this.getMusic);
   }
 
   private async upload(req: Request, res: Response) {
@@ -28,5 +31,10 @@ export default class MusicModule {
     const response = await usecase.upload(payload);
 
     return res.json(response);
+  }
+
+  private async getMusic(req: Request, res: Response) {
+    const response = await usecase.getMusic();
+    return res.send(response);
   }
 }
