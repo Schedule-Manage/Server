@@ -24,7 +24,7 @@ export type TrackInput = yup.InferType<typeof TrackValidationSchema>;
 
 export const fileStorageEngine = multer.diskStorage({
   destination: (req: any, file: any, cb: any) => {
-    const dir = "./images";
+    const dir = "./music";
     fs.mkdirSync(dir, {
       recursive: true,
     });

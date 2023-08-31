@@ -20,7 +20,7 @@ export default class MusicModule {
 
   private config() {
     // Router for Uploading music
-    this.router.post("/upload", uploadImg.single("image"), this.upload);
+    this.router.post("/upload", uploadImg.single("music"), this.upload);
   }
 
   private async upload(req: Request, res: Response) {
