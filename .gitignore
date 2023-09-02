@@ -3,6 +3,7 @@ node_modules/
 compiled/
 logs/
 coverage/
+music/
 
 # Environment Variables
 *.env
