@@ -3,6 +3,7 @@ import cors from "cors";
 import morganMiddleware from "../middleware/loggers/morgan_middleware";
 import AppRouter from "../../presentation/rest/routes";
 import { createCorsOptions } from "./../utils/helpers";
+const path = require("path");
 const runServer = () => {
   const app: Application = express();
 
@@ -12,6 +13,8 @@ const runServer = () => {
 
   //   Logging
   app.use(morganMiddleware);
+
+  // app.use("/music", express.static(path.join(__dirname, "music")));
 
   //   express to use json parser
   app.use(express.json());
