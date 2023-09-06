@@ -17,7 +17,7 @@ const main = () => {
         .catch((err) => logger_1.default.error(err));
     app.listen(port, () => {
         logger_1.default.debug("Server started");
-        logger_1.default.info(`Running on 👉🏼 ${host}: ${port} `);
+        logger_1.default.info(`Running on 👉🏼 ${host}:${port} `);
     });
 };
 main();
