@@ -46,25 +46,14 @@ export default class MusicRepository {
         // Handling error
 
         if (err) {
-          // return;
-
           console.log("Unable to scan directory: " + err);
         }
-        // Listing all files using forEach
-        files.forEach(function (file: any) {
-          console.log(file);
-        });
-
-        // Return a response after reading the directory
-
-        // const response = {
-          //   status: 200,
-          //   data: files,
-        // };
-        // return response;
+        return files;
       });
-      console.log(files);
-      return { data: files, status: 200, message: "Here are the files" };
+      let fileList = files.map((f: any) => {
+        return `http://localhost:3000/api/v1/static/music/${f}`;
+      });
+      return { data: fileList, status: 200, message: "Here are the files" };
     } catch (error) {
       // Handle synchronous errors
 
@@ -78,7 +67,7 @@ export default class MusicRepository {
         },
       };
 
-      console.error(response);
+      return response;
     }
   }
 }

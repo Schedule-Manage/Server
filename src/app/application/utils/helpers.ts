@@ -41,7 +41,6 @@ const comparePasswords = async (input: PasswordCompareInput) => {
   return result;
 };
 
-
 // For sending email
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -65,10 +64,15 @@ function generateRandomString(length: number) {
   return randomString;
 }
 
+const formatAudioName = (name: string) => {
+  return name.trim().split(" ").join("_");
+};
+
 export {
   comparePasswords,
   generateSecurePasswords,
   createCorsOptions,
   transporter,
   generateRandomString,
+  formatAudioName,
 };

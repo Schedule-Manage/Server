@@ -13,9 +13,8 @@ const runServer = () => {
 
   //   Logging
   app.use(morganMiddleware);
-
-  // app.use("/music", express.static(path.join(__dirname, "music")));
-
+  const staticPath = path.join(__dirname, "../../../../music");
+  app.use("/api/v1/static/music", express.static(staticPath));
   //   express to use json parser
   app.use(express.json());
 
