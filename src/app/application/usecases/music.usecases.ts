@@ -11,7 +11,11 @@ export default class MusicUsecase {
     return await this.repository.upload(input);
   }
 
-  async getMusic(){
-    return await this.repository.getMusic()
+  async getMusic() {
+    return await this.repository.getMusic();
+  }
+
+  async historyPlaylist(payload: any) {
+    return await this.repository.historyPlaylist(payload);
   }
 }
