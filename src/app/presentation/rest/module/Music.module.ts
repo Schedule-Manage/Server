@@ -27,6 +27,9 @@ export default class MusicModule {
 
     // Route for playlist history
     this.router.post("/playlist/:id", this.historyPlaylist);
+
+    // Route for adding song to playlist
+    this.router.post("/add", this.addSongToPlayList);
   }
 
   private async upload(req: Request, res: Response) {
@@ -38,6 +41,13 @@ export default class MusicModule {
 
   private async getMusic(req: Request, res: Response) {
     const response = await usecase.getMusic();
+    return res.send(response);
+  }
+
+  // Adding song to playlist
+  private async addSongToPlayList(req: Request, res: Response) {
+    const payload: any = req.body;
+    const response = await usecase.addSongToPlayList(payload);
     return res.send(response);
   }
 

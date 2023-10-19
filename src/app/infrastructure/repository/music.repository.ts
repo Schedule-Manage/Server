@@ -72,6 +72,27 @@ export default class MusicRepository {
     }
   }
 
+  async addSongToPlayList(payload: any) {
+    try {
+      console.log(payload)
+    } catch (error) {
+      Logger.error(error);
+      /**
+       * Server errors.
+       * TODO: These can be checked based on prisma codes for db specific errors
+       */
+      // return {
+      //   status: 500,
+      //   message: "Music upload cannot be completed at the moment",
+      //   error: {
+      //     errors: {
+      //       details: error,
+      //     },
+      //   },
+      // };
+    }
+  }
+
   async historyPlaylist(payload: any) {
     try {
       const findSong = await Track.findById(payload);
@@ -81,17 +102,17 @@ export default class MusicRepository {
       }).exec();
       console.log(isSongPlayed);
       if (isSongPlayed) {
-        return{
-          data: "Song already exists"
-        }
+        return {
+          data: "Song already exists",
+        };
       }
 
       const newHistory = new History({
-          title: findSong.title,
-          audio_url: findSong.audio_url,
-        });
-        const savedTrack = newHistory.save();
-        return { status: 200, data: savedTrack };
+        title: findSong.title,
+        audio_url: findSong.audio_url,
+      });
+      const savedTrack = newHistory.save();
+      return { status: 200, data: savedTrack };
     } catch (error) {
       Logger.error(error);
       /**
