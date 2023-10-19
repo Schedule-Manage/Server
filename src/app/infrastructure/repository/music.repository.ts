@@ -3,6 +3,7 @@ import Logger from "../../application/middleware/loggers/logger";
 
 // Importing the Music database
 const Track = require("./../../presentation/rest/model/music/Music.model");
+const Playlist = require("./../../presentation/rest/model/music/Playlist.model");
 const History = require("./../../presentation/rest/model/music/History.model");
 const fs = require("fs");
 const path = require("path");
@@ -72,9 +73,16 @@ export default class MusicRepository {
     }
   }
 
+  // Adding song to playlist
   async addSongToPlayList(payload: any) {
     try {
-      console.log(payload)
+      const findSong = await Track.findOne({ title: payload.title }).exec();
+      const newPlaylist = new Playlist({
+        name: payload.name,
+        songs: []
+      })
+      
+      
     } catch (error) {
       Logger.error(error);
       /**
