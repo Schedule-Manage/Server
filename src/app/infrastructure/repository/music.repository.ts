@@ -11,6 +11,7 @@ export default class MusicRepository {
   constructor() {}
 
   async upload(input: any) {
+    console.log(input);
     try {
       const newTrack = new Track({
         title: input.originalname,
@@ -77,12 +78,26 @@ export default class MusicRepository {
   async addSongToPlayList(payload: any) {
     try {
       const findSong = await Track.findOne({ title: payload.title }).exec();
+      console.log(findSong);
       const newPlaylist = new Playlist({
-        name: payload.name,
-        songs: []
-      })
-      
-      
+        name: "test",
+
+        songs: [findSong._id],
+        // Add the song to the playlist during creation
+
+        // Other properties for your playlist, if any
+      });
+
+      const createdPlaylist = await newPlaylist.save();
+
+      console.log(`Created a new playlist: ${createdPlaylist.name}`);
+
+      console.log(`Song '${findSong.title}' added to the playlist.`);
+
+      // const newPlaylist = new Playlist({
+      //   name: payload.name,
+      //   songs: []
+      // })
     } catch (error) {
       Logger.error(error);
       /**
