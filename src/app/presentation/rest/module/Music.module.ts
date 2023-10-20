@@ -30,6 +30,7 @@ export default class MusicModule {
 
     // Route for adding song to playlist
     this.router.post("/add", this.addSongToPlayList);
+    this.router.post("/add/:id", this.addSongToSpecificPlayList);
   }
 
   private async upload(req: Request, res: Response) {
@@ -48,6 +49,13 @@ export default class MusicModule {
   private async addSongToPlayList(req: Request, res: Response) {
     const payload: any = req.body;
     const response = await usecase.addSongToPlayList(payload);
+    return res.send(response);
+  }
+
+  // For adding to a specific playlist
+  private async addSongToSpecificPlayList(req: Request, res: Response) {
+    const payload = req;
+    const response = await usecase.addSongToSpecificPlayList(payload);
     return res.send(response);
   }
 

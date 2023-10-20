@@ -19,7 +19,12 @@ export default class MusicUsecase {
     return await this.repository.historyPlaylist(payload);
   }
 
-  async addSongToPlayList(payload: any){
+  async addSongToPlayList(payload: any) {
     return await this.repository.addSongToPlayList(payload);
+  }
+
+  // Add song to a specific playlist
+  async addSongToSpecificPlayList(payload: any) {
+    return await this.repository.addSongToSpecificPlayList(payload);
   }
 }

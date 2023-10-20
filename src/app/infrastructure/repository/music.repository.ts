@@ -116,6 +116,27 @@ export default class MusicRepository {
     }
   }
 
+  // Add song to specific playlist
+  async addSongToSpecificPlayList(payload: any) {
+    try {
+      console.log(payload.body);
+      console.log(payload.params.id);
+      const findSong = await Track.findOne({
+        title: payload.body.title,
+      }).exec();
+
+      const findPlaylist = await Playlist.findByIdAndUpdate(payload.params.id, {
+        $push: { songs: findSong._id },
+      });
+
+      if (findPlaylist) {
+        console.log("Song added");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async historyPlaylist(payload: any) {
     try {
       const findSong = await Track.findById(payload);
