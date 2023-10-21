@@ -45,18 +45,19 @@ export default class MusicRepository {
 
   async getMusic() {
     try {
-      let files = fs.readdirSync("./music", function (err: any, files: any) {
-        // Handling error
+      // let files = fs.readdirSync("./music", function (err: any, files: any) {
+      //   // Handling error
 
-        if (err) {
-          console.log("Unable to scan directory: " + err);
-        }
-        return files;
-      });
-      let fileList = files.map((f: any) => {
-        return `http://localhost:3000/api/v1/static/music/${f}`;
-      });
-      return { data: fileList, status: 200, message: "Here are the files" };
+      //   if (err) {
+      //     console.log("Unable to scan directory: " + err);
+      //   }
+      //   return files;
+      // });
+      // let fileList = files.map((f: any) => {
+      //   return `http://localhost:3000/api/v1/static/music/${f}`;
+      // });
+      const allMusic = await Track.find({});
+      return { data: allMusic, status: 200, message: "Here are the files" };
     } catch (error) {
       // Handle synchronous errors
 
