@@ -18,6 +18,10 @@ export default class MusicUsecase {
   async historyPlaylist(payload: any) {
     return await this.repository.historyPlaylist(payload);
   }
+  // Get all song in history
+  async getAllHistoryPlaylist() {
+    return await this.repository.getAllHistoryPlaylist();
+  }
 
   async addSongToPlayList(payload: any) {
     return await this.repository.addSongToPlayList(payload);

@@ -79,7 +79,6 @@ export default class MusicRepository {
   async addSongToPlayList(payload: any) {
     try {
       const findSong = await Track.findOne({ title: payload.title }).exec();
-      console.log(findSong);
       const newPlaylist = new Playlist({
         name: "test",
 
@@ -90,8 +89,6 @@ export default class MusicRepository {
       });
 
       const createdPlaylist = await newPlaylist.save();
-
-      console.log(`Created a new playlist: ${createdPlaylist.name}`);
 
       console.log(`Song '${findSong.title}' added to the playlist.`);
 
@@ -147,8 +144,9 @@ export default class MusicRepository {
       }).exec();
       console.log(isSongPlayed);
       if (isSongPlayed) {
+        const getAll = await History.find({});
         return {
-          data: "Song already exists",
+          data: getAll,
         };
       }
 
@@ -158,6 +156,29 @@ export default class MusicRepository {
       });
       const savedTrack = newHistory.save();
       return { status: 200, data: savedTrack };
+    } catch (error) {
+      Logger.error(error);
+      /**
+       * Server errors.
+       * TODO: These can be checked based on prisma codes for db specific errors
+       */
+      return {
+        status: 500,
+        message: "Music upload cannot be completed at the moment",
+        error: {
+          errors: {
+            details: error,
+          },
+        },
+      };
+    }
+  }
+
+  async getAllHistoryPlaylist() {
+    try {
+      const getAll = await History.find({});
+      
+      return { status: 200, data: getAll };
     } catch (error) {
       Logger.error(error);
       /**

@@ -26,7 +26,8 @@ export default class MusicModule {
     this.router.get("/", this.getMusic);
 
     // Route for playlist history
-    this.router.post("/playlist/:id", this.historyPlaylist);
+    this.router.post("/history/playlist/:id", this.historyPlaylist);
+    this.router.get("/history/playlist", this.getAllHistoryPlaylist);
 
     // Route for adding song to playlist
     this.router.post("/add", this.addSongToPlayList);
@@ -65,4 +66,9 @@ export default class MusicModule {
     const response = await usecase.historyPlaylist(payload);
     return res.send(response);
   }
+  // get all song in history playlist
+  private async getAllHistoryPlaylist(req:any, res:any){
+    const response = await usecase.getAllHistoryPlaylist();
+    return res.send(response)
+  };
 }
