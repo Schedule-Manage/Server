@@ -3,6 +3,7 @@ const multer = require("multer");
 import fs from "fs";
 import path from "path";
 import * as yup from "yup";
+import { formatAudioName } from "../../../application/utils/helpers";
 
 export const TrackValidationSchema = yup.object({
   title: yup.string().required("Title is required"),
@@ -33,6 +34,6 @@ export const fileStorageEngine = multer.diskStorage({
   },
 
   filename: (req: any, file: any, cb: any) => {
-    return cb(null, file.originalname);
+    return cb(null, formatAudioName(file.originalname));
   },
 });
