@@ -177,7 +177,7 @@ export default class MusicRepository {
   async getAllHistoryPlaylist() {
     try {
       const getAll = await History.find({});
-      
+
       return { status: 200, data: getAll };
     } catch (error) {
       Logger.error(error);
@@ -194,6 +194,15 @@ export default class MusicRepository {
           },
         },
       };
+    }
+  }
+
+  async deleteHistorySong(payload: any) {
+    try {
+      const findSong = await History.findByIdAndDelete(payload);
+      return { status: 200, message: "Song deleted from history" };
+    } catch (error) {
+      console.log(error);
     }
   }
 }
