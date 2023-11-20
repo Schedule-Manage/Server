@@ -11,7 +11,7 @@ import { PasswordCompareInput } from "../../../../types";
  * @returns
  */
 const createCorsOptions = (): cors.CorsOptions => {
-  const allowedDomains = process.env.ALLOWED_DOMAINS ?? "";
+  const allowedDomains = process.env.ALLOWED_DOMAINS ?? "*";
   const domains = allowedDomains.split(";").join(",");
 
   const corsOptions: cors.CorsOptions = {
