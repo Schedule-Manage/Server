@@ -15,7 +15,7 @@ export default class MusicRepository {
     try {
       const newTrack = new Track({
         title: input.originalname,
-        audio_url: `http://localhost:3000/api/v1/static/${input.path}`,
+        audio_url: `https://backend-learn.onrender.com/api/v1/static/${input.path}`,
         mimetype: input.mimetype,
         size: input.size,
       });
