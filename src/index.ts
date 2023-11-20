@@ -3,7 +3,7 @@ import Logger from "./app/application/middleware/loggers/logger";
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const main = () => {
+export const main = () => {
   const port = process.env.PORT || 3000;
   const host = process.env.SERVER_URL;
 
