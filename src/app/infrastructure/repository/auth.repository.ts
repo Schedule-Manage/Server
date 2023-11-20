@@ -233,7 +233,7 @@ export default class AuthRepository {
 
         const filePath = path.join(
           __dirname,
-          "../../../app/presentation/templates/email/passwordforgot.ejs"
+          "../../../app/presentation/templates/email/updatePass.ejs"
         );
 
         let html = await ejs.renderFile(filePath);
