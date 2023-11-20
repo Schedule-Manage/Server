@@ -1,9 +1,9 @@
 # Common files
-node_modules/
+node_modules
 compiled/
 logs/
 coverage/
-music/
+# music/
 
 # Environment Variables
 *.env
